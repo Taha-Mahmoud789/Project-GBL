@@ -8,8 +8,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@image2model/core': path.resolve(__dirname, '../../packages/core/src'),
-      '@image2model/viewer': path.resolve(__dirname, '../../packages/viewer/src'),
     },
   },
 })

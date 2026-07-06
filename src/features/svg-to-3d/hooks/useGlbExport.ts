@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { getEngine } from '@/engine';
 import { useLayerStore } from '../store/useLayerStore';
 import { buildLayerGroup, validateGlb, downloadBlob } from '@/shared/exporters/glbExporter';
 import type { ExportOptions } from '@/types';
@@ -18,19 +17,16 @@ export function useGlbExport() {
       setExportError(null);
 
       try {
-        const engine = getEngine();
-
-        if (engine.id === 'local') {
-          await engine.exportGLB(new THREE.Group(), options);
-          return;
-        }
-
+        // Build THREE.Group from current layer configs
         const layerPairs = layers
           .filter((l) => l.visible)
           .map((config) => ({ config, shapeData: config.shapeData }));
 
         const group = buildLayerGroup(layerPairs);
-        const blob = await engine.exportGLB(group, options);
+
+        // Export using GLTFExporter (works for all engine types)
+        const { exportToGlb } = await import('@/shared/exporters/glbExporter');
+        const blob = await exportToGlb(group);
 
         const validation = validateGlb(blob);
         if (!validation.valid) {
@@ -41,6 +37,7 @@ export function useGlbExport() {
         const filename = options.filename || 'model.glb';
         downloadBlob(blob, filename.endsWith('.glb') ? filename : `${filename}.glb`);
 
+        // Cleanup
         group.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;

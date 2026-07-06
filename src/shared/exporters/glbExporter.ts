@@ -1,10 +1,6 @@
 import * as THREE from 'three';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 import type { LayerConfig } from '@/types';
-import {
-  createExtrudedGeometry,
-  createMaterial,
-} from '@image2model/core';
 
 /**
  * Build a THREE.Group from layer configs and their shape data.
@@ -22,7 +18,7 @@ export function buildLayerGroup(
     if (!config.visible) continue;
 
     const shape = shapeData as THREE.Shape;
-    const geometry = createExtrudedGeometry(shape, {
+    const geometry = new THREE.ExtrudeGeometry(shape, {
       depth: config.depth,
       bevelEnabled: config.bevelEnabled,
       bevelThickness: config.bevelThickness,
@@ -32,10 +28,11 @@ export function buildLayerGroup(
       steps: 2,
     });
 
-    const material = createMaterial({
+    const material = new THREE.MeshStandardMaterial({
       color: config.fillColor,
       metalness: 0.2,
       roughness: 0.4,
+      transparent: config.opacity < 1,
       opacity: config.opacity,
     });
 
@@ -70,7 +67,6 @@ export async function exportToGlb(group: THREE.Group): Promise<Blob> {
     exporter.parse(
       group,
       (result) => {
-        // result is ArrayBuffer for binary
         resolve(new Blob([result as ArrayBuffer], { type: 'model/gltf-binary' }));
       },
       (error) => reject(error),
@@ -81,17 +77,14 @@ export async function exportToGlb(group: THREE.Group): Promise<Blob> {
 
 /**
  * Validate a GLB blob after export.
- * Checks magic number, minimum size, and structure.
  */
 export function validateGlb(blob: Blob): { valid: boolean; error?: string } {
   if (blob.size === 0) {
     return { valid: false, error: 'Exported GLB is empty (0 bytes)' };
   }
-
   if (blob.size < 12) {
     return { valid: false, error: `GLB too small: ${blob.size} bytes (minimum 12)` };
   }
-
   return { valid: true };
 }
 

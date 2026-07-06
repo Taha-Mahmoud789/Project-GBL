@@ -18,9 +18,7 @@
 
     /* Path aliases */
     "paths": {
-      "@/*": ["./src/*"],
-      "@image2model/core": ["../../packages/core/src/index.ts"],
-      "@image2model/viewer": ["../../packages/viewer/src/index.ts"]
+      "@/*": ["./src/*"]
     },
 
     /* Linting */
@@ -29,6 +27,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "../../packages/core/src", "../../packages/viewer/src"],
-  "exclude": ["../../packages/core/src/legacy"]
+  "include": ["src"]
 }

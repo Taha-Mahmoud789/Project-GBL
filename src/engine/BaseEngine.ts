@@ -28,7 +28,7 @@ export interface BaseEngine {
   readonly id: string;
   readonly name: string;
 
-  analyze(svgContent: string): EngineAnalysis;
+  analyze(svgContent: string): EngineAnalysis | Promise<EngineAnalysis>;
 
   convert(
     svgContent: string,
