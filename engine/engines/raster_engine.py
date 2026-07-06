@@ -5,6 +5,7 @@ and any other feature that can't be parsed into vector geometry.
 
 Strategy:
   1. Try cairosvg rasterization → contour trace (if cairo available)
+  1.5. Decode embedded base64 raster images → contour trace (no cairo needed)
   2. Fallback: strip filters/images, keep paths → vector engine
   3. Last resort: extract all path data directly, ignore effects
 """
@@ -19,7 +20,11 @@ from typing import Any, Optional
 from shapely.geometry import Polygon
 from lxml import etree
 
+from collections import defaultdict
+from shapely.ops import unary_union
+
 from geometry import parse_svg, normalize, extract_layers
+from materials import apply_color
 
 
 def _has_cairo() -> bool:
@@ -116,6 +121,41 @@ def _trace_contours(
     return results
 
 
+def _trace_embedded_images(svg_content: str) -> list[tuple[np.ndarray, str, float]]:
+    """Decode base64-embedded images from SVG and trace their contours.
+
+    Handles "raster-in-SVG" files where the visual content is a PNG/JPEG
+    inside an <image> element rather than vector geometry.
+    """
+    try:
+        root = etree.fromstring(svg_content.encode("utf-8"))
+    except Exception:
+        return []
+
+    NS_SVG = "http://www.w3.org/2000/svg"
+    NS_XLINK = "http://www.w3.org/1999/xlink"
+    from PIL import Image
+
+    all_contours = []
+    for el in root.iter(f"{{{NS_SVG}}}image"):
+        href = el.get(f"{{{NS_XLINK}}}href") or el.get("href") or ""
+        if not href.startswith("data:image/"):
+            continue
+        match = re.match(r"data:image/\w+;base64,(.+)", href, re.DOTALL)
+        if not match:
+            continue
+        try:
+            raw = base64.b64decode(match.group(1))
+            img = Image.open(io.BytesIO(raw)).convert("RGBA")
+            rgba = np.array(img)
+            contours = _trace_contours(rgba, min_area=5.0, simplify_tolerance=1.5)
+            all_contours.extend(contours)
+        except Exception:
+            continue
+
+    return all_contours
+
+
 def _strip_complex_effects(svg_content: str) -> str:
     """Remove filters, masks, clipPaths, embedded images from SVG.
 
@@ -202,7 +242,7 @@ def _extrude_polygon(
     if mesh is None or len(mesh.vertices) == 0:
         return None
     r, g, b = _hex_to_rgb(color)
-    mesh.visual.vertex_colors = np.array([r, g, b, 255], dtype=np.uint8)
+    apply_color(mesh, color, metalness, roughness)
     return mesh
 
 
@@ -235,6 +275,11 @@ class RasterEngine:
                 contours = _trace_contours(rgba, min_area=5.0, simplify_tolerance=1.5)
                 if contours:
                     return self._build_scene_from_traces(contours, depth, metalness, roughness, target_size)
+
+        # Path 1.5: decode embedded raster images → trace (no cairo needed)
+        contours = _trace_embedded_images(svg_content)
+        if contours:
+            return self._build_scene_from_traces(contours, depth, metalness, roughness, target_size)
 
         # Path 2: strip effects → vector fallback with timeout
         simplified = _strip_complex_effects(svg_content)
@@ -277,21 +322,29 @@ class RasterEngine:
         self, traces, depth, metalness, roughness, target_size
     ) -> trimesh.Scene:
         scene = trimesh.Scene()
-        for i, (pts, color, opacity) in enumerate(traces):
+        by_color = defaultdict(list)
+        for pts, color, opacity in traces:
             try:
                 poly = Polygon(pts)
                 if not poly.is_valid:
                     poly = poly.buffer(0)
-                if poly.is_empty:
-                    continue
-                mesh = _extrude_polygon(poly, depth, color, metalness, roughness)
-                if mesh is None or len(mesh.vertices) == 0:
-                    continue
-                mesh.apply_scale([target_size, target_size, 1])
-                centroid = mesh.centroid
-                mesh.apply_translation([-centroid[0], -centroid[1], 0])
-                mesh.apply_translation([0, 0, i * (depth + 0.02)])
-                scene.add_geometry(mesh, node_name=f"layer_{i}")
+                if not poly.is_empty:
+                    by_color[color].append(poly)
+            except Exception:
+                continue
+        for i, (color, polys) in enumerate(by_color.items()):
+            try:
+                merged = unary_union(polys)
+                geoms = [merged] if merged.geom_type == "Polygon" else list(merged.geoms)
+                for j, poly in enumerate(geoms):
+                    mesh = _extrude_polygon(poly, depth, color, metalness, roughness)
+                    if mesh is None or len(mesh.vertices) == 0:
+                        continue
+                    mesh.apply_scale([target_size, target_size, 1])
+                    centroid = mesh.centroid
+                    mesh.apply_translation([-centroid[0], -centroid[1], 0])
+                    mesh.apply_translation([0, 0, i * (depth + 0.02)])
+                    scene.add_geometry(mesh, node_name=f"color_{i}_{j}")
             except Exception:
                 continue
         return scene

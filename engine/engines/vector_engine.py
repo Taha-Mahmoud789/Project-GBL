@@ -11,6 +11,7 @@ from shapely.geometry import Polygon
 from shapely.ops import unary_union
 
 from geometry import parse_svg, normalize, extract_layers, Layer, GeometryShape
+from materials import apply_color
 
 
 def _hex_to_rgb(color: str) -> tuple[float, float, float]:
@@ -59,9 +60,7 @@ def _extrude_polygon(
         return None
 
     r, g, b = _hex_to_rgb(color)
-    mesh.visual.vertex_colors = np.array(
-        [int(r * 255), int(g * 255), int(b * 255), 255], dtype=np.uint8
-    )
+    apply_color(mesh, color, metalness, roughness)
 
     return mesh
 
@@ -160,27 +159,11 @@ class VectorEngine:
         mesh_idx = 0
 
         for color, group_shapes in color_groups.items():
-            # Collect all polygons for this color and build compound shapes
-            all_polys = []
-            for shape in group_shapes:
-                for pts in shape.polygons:
-                    if len(pts) >= 4:
-                        all_polys.append(pts)
-
-            if not all_polys:
-                continue
-
-            # Try to merge overlapping polygons of the same color
             shapely_polys = []
-            for pts in all_polys:
-                try:
-                    p = Polygon(pts)
-                    if not p.is_valid:
-                        p = p.buffer(0)
-                    if not p.is_empty and p.area > 1e-10:
-                        shapely_polys.append(p)
-                except Exception:
-                    continue
+            for shape in group_shapes:
+                compound = _build_shapely_polygon(shape.polygons, shape.fill_rule)
+                if compound is not None:
+                    shapely_polys.append(compound)
 
             if not shapely_polys:
                 continue

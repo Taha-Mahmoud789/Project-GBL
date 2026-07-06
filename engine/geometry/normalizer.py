@@ -114,8 +114,10 @@ def _fix_arc_flags(tokens: list) -> list:
     single digits (0 or 1). Some SVGs write them concatenated with adjacent
     numbers (e.g., '0143.399' should be '0', '1', '43.399').
 
-    Strategy: walk the token list, and when we see an 'a'/'A' command,
-    check if the expected flag positions (3rd and 4th args) need splitting.
+    Uses a carry-chain: when arg_pos=3 splits '0143.399' → '0' + carry '143.399',
+    arg_pos=4 picks up carry and splits → '1' + carry '43.399'.
+    # ponytail: old for-loop used enumerate(args) indices, so a split at j=3
+    # injected rest at the j=4 slot but the loop checked original args[4].
     """
     result = []
     i = 0
@@ -124,28 +126,29 @@ def _fix_arc_flags(tokens: list) -> list:
         if tok in ("a", "A"):
             result.append(tok)
             i += 1
-            # Collect up to 7 arg tokens
             args = []
             while i < len(tokens) and not tokens[i].isalpha() and len(args) < 7:
                 args.append(tokens[i])
                 i += 1
-            # Split combined flags at positions 3 and 4 (large_arc, sweep)
             fixed_args = []
-            for j, a in enumerate(args):
-                if j in (3, 4):
-                    # Flag is always a single digit 0 or 1
-                    # If the token starts with '0' or '1' and is longer,
-                    # it might be a flag merged with the next number
-                    if len(a) >= 2 and a[0] in ('0', '1'):
-                        flag = a[0]
-                        rest = a[1:]
-                        fixed_args.append(flag)
-                        if rest:
-                            fixed_args.append(rest)
-                    else:
-                        fixed_args.append(a)
+            arg_pos = 0
+            arg_idx = 0
+            rest = None
+            while arg_pos < 7:
+                if rest is not None:
+                    a = rest
+                    rest = None
+                elif arg_idx < len(args):
+                    a = args[arg_idx]
+                    arg_idx += 1
+                else:
+                    break
+                if arg_pos in (3, 4) and len(a) >= 2 and a[0] in ('0', '1'):
+                    fixed_args.append(a[0])
+                    rest = a[1:]
                 else:
                     fixed_args.append(a)
+                arg_pos += 1
             result.extend(fixed_args)
         else:
             result.append(tok)
@@ -325,16 +328,18 @@ def _arc_to_polyline(
     rx_sq = rx * rx
     ry_sq = ry * ry
     sq = math.sqrt(max(0, rx_sq * ry_sq - rx_sq * y1p**2 - ry_sq * x1p**2))
+    denom = rx_sq * y1p**2 + ry_sq * x1p**2
+    factor = sq / math.sqrt(denom) if denom > 0 else 0
     if large_arc == sweep:
-        sq = -sq
+        factor = -factor
 
-    cxp = sq * rx * y1p / ry if ry != 0 else 0
-    cyp = -sq * ry * x1p / rx if rx != 0 else 0
+    cxp = factor * rx * y1p / ry if ry != 0 else 0
+    cyp = -factor * ry * x1p / rx if rx != 0 else 0
     cx = cos_r * cxp - sin_r * cyp + (x1 + x2) / 2
     cy = sin_r * cxp + cos_r * cyp + (y1 + y2) / 2
 
     theta1 = math.atan2((y1p - cyp) / ry, (x1p - cxp) / rx) if rx and ry else 0
-    dtheta = math.atan2(-(y1p - cyp) / ry, -(x1p - cxp) / rx) - theta1 if rx and ry else 0
+    dtheta = math.atan2((-y1p - cyp) / ry, (-x1p - cxp) / rx) - theta1 if rx and ry else 0
 
     if sweep:
         if dtheta < 0:

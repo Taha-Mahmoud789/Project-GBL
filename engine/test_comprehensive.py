@@ -25,9 +25,7 @@ TEST_DIR = os.path.join(os.path.dirname(__file__), "..", "test-svgs")
 
 # Known-expected results:
 # - SVGs with only raster content (GeekCode, bootstrap) produce 0 vector meshes
-# - SVGs with problematic arc paths (jquery, wordpress) may hang vector engine
 EXPECTED_EMPTY_VECTOR = {"GeekCode.svg", "bootstrap-original-wordmark.svg"}
-EXPECTED_HANG = {"jquery-plain-wordmark.svg"}
 
 settings = {
     "depth": 0.5,
@@ -73,12 +71,7 @@ def test_vector_engine():
     print("\n=== VECTOR ENGINE ===")
     passed = 0
     failed = 0
-    skipped = 0
     for fname in get_svg_files():
-        if fname in EXPECTED_HANG:
-            print(f"  SKIP {fname}: known hang")
-            skipped += 1
-            continue
         with open(os.path.join(TEST_DIR, fname), "r", encoding="utf-8", errors="replace") as f:
             svg = f.read()
         t0 = time.time()
@@ -103,7 +96,7 @@ def test_vector_engine():
             else:
                 print(f"  FAIL {fname}: {e} in {elapsed:.2f}s")
                 failed += 1
-    print(f"  Results: {passed}/{passed+failed+skipped} (skipped: {skipped})")
+    print(f"  Results: {passed}/{passed+failed}")
     return failed == 0
 
 
@@ -111,12 +104,7 @@ def test_layer_engine():
     print("\n=== LAYER ENGINE ===")
     passed = 0
     failed = 0
-    skipped = 0
     for fname in get_svg_files():
-        if fname in EXPECTED_HANG:
-            print(f"  SKIP {fname}: known hang")
-            skipped += 1
-            continue
         with open(os.path.join(TEST_DIR, fname), "r", encoding="utf-8", errors="replace") as f:
             svg = f.read()
         t0 = time.time()
@@ -135,7 +123,7 @@ def test_layer_engine():
             else:
                 print(f"  FAIL {fname}: {e} in {elapsed:.2f}s")
                 failed += 1
-    print(f"  Results: {passed}/{passed+failed+skipped} (skipped: {skipped})")
+    print(f"  Results: {passed}/{passed+failed}")
     return failed == 0
 
 
@@ -145,10 +133,6 @@ def test_raster_engine():
     failed = 0
     skipped = 0
     for fname in get_svg_files():
-        if fname in EXPECTED_HANG:
-            print(f"  SKIP {fname}: known hang")
-            skipped += 1
-            continue
         with open(os.path.join(TEST_DIR, fname), "r", encoding="utf-8", errors="replace") as f:
             svg = f.read()
         t0 = time.time()
@@ -162,7 +146,7 @@ def test_raster_engine():
             elapsed = time.time() - t0
             print(f"  FAIL {fname}: {e} in {elapsed:.2f}s")
             failed += 1
-    print(f"  Results: {passed}/{passed+failed+skipped} (skipped: {skipped})")
+    print(f"  Results: {passed}/{passed+failed}")
     return failed == 0
 
 
@@ -171,8 +155,6 @@ def test_glb_export():
     passed = 0
     failed = 0
     for fname in get_svg_files():
-        if fname in EXPECTED_HANG:
-            continue
         with open(os.path.join(TEST_DIR, fname), "r", encoding="utf-8", errors="replace") as f:
             svg = f.read()
         try:
@@ -182,7 +164,20 @@ def test_glb_export():
             glb = export_glb(scene)
             assert len(glb) > 0, "empty GLB"
             assert glb[:4] == b'glTF', "not a GLB file"
-            print(f"  OK   {fname}: {len(glb)} bytes GLB")
+
+            # Reload and validate materials on each mesh
+            loaded = trimesh.load(io.BytesIO(glb), file_type="glb")
+            mesh_count = 0
+            mat_count = 0
+            for geom in loaded.geometry.values():
+                if hasattr(geom, 'vertices'):
+                    mesh_count += 1
+                    if hasattr(geom.visual, 'material'):
+                        mat_count += 1
+            assert mat_count > 0, f"0 materials in GLB"
+            assert mesh_count > 0, f"0 meshes in GLB"
+
+            print(f"  OK   {fname}: {mesh_count} meshes, {mat_count} materials, {len(glb)} bytes")
             passed += 1
         except Exception as e:
             print(f"  FAIL {fname}: {e}")

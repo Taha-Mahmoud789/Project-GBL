@@ -15,6 +15,7 @@ from shapely.ops import unary_union
 
 from geometry import parse_svg, normalize, extract_layers
 from geometry.hierarchy import Layer, _compute_bbox
+from materials import apply_color
 
 
 def _make_layer_id(group_id: str, index: int) -> str:
@@ -70,9 +71,7 @@ def _extrude_polygon(
         return None
 
     r, g, b = _hex_to_rgb(color)
-    mesh.visual.vertex_colors = np.array(
-        [int(r * 255), int(g * 255), int(b * 255), 255], dtype=np.uint8
-    )
+    apply_color(mesh, color, metalness, roughness)
     return mesh
 
 
