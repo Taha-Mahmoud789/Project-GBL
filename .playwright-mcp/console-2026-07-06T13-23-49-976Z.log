@@ -1,0 +1,14 @@
+[  685619ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5173/src/features/svg-to-3d/components/ExportModal.tsx?t=1783344913209:0
+[  685620ms] [ERROR] [vite] Failed to reload /src/features/svg-to-3d/components/ExportModal.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:928
+[  685621ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5173/src/features/svg-to-3d/components/LayeredModelRenderer.tsx?t=1783344913209:0
+[  685621ms] [ERROR] [vite] Failed to reload /src/features/svg-to-3d/components/LayeredModelRenderer.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:928
+[  685621ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5173/src/app/App.tsx?t=1783344913209:0
+[  685621ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5173/src/features/viewer/components/ModelRenderer.tsx?t=1783344913209:0
+[  685621ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:5173/src/features/upload/components/UploadPanel.tsx?t=1783344913209:0
+[  685622ms] [ERROR] [vite] Failed to reload /src/app/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:928
+[  685622ms] [ERROR] [vite] Failed to reload /src/features/viewer/components/ModelRenderer.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:928
+[  685622ms] [ERROR] [vite] Failed to reload /src/features/upload/components/UploadPanel.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:928
+[  685623ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:5173/@vite/client:992
+[ 1534344ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=ffa3c7f4:14088
+[ 1534457ms] [WARNING] THREE.Clock: This module has been deprecated. Please use THREE.Timer instead. @ http://localhost:5173/node_modules/.vite/deps/three.module-lstlDpke.js?v=ffa3c7f4:1728
+[ 1544523ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:5173/@vite/client:992

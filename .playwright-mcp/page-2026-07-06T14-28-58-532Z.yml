@@ -1,0 +1,32 @@
+- generic [ref=f7e3]:
+  - banner [ref=f7e4]:
+    - generic [ref=f7e5]:
+      - img [ref=f7e7]
+      - heading "Image2Model" [level=1] [ref=f7e10]
+      - generic [ref=f7e11]: Beta
+    - navigation [ref=f7e12]:
+      - button "Docs" [ref=f7e13]
+      - button "GitHub" [ref=f7e14]
+  - main [ref=f7e15]:
+    - complementary [ref=f7e16]:
+      - heading "Images" [level=2] [ref=f7e18]
+      - generic [ref=f7e21]:
+        - generic [ref=f7e23] [cursor=pointer]:
+          - img [ref=f7e24]
+          - generic [ref=f7e27]:
+            - paragraph [ref=f7e28]: Drop PNG or SVG
+            - paragraph [ref=f7e29]: or click to browse
+          - generic [ref=f7e30]:
+            - generic [ref=f7e31]: .PNG
+            - generic [ref=f7e32]: .SVG
+        - generic [ref=f7e34]:
+          - img [ref=f7e35]
+          - paragraph [ref=f7e40]: No file uploaded
+          - paragraph [ref=f7e41]: Supports PNG and SVG formats
+    - generic [ref=f7e47]: 3D Viewport
+    - complementary [ref=f7e48]:
+      - heading "Controls" [level=2] [ref=f7e50]
+      - generic [ref=f7e52]:
+        - img [ref=f7e54]
+        - paragraph [ref=f7e57]: No file uploaded
+        - paragraph [ref=f7e58]: Upload an SVG file to convert it to a 3D model

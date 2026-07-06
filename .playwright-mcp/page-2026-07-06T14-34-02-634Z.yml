@@ -1,0 +1,170 @@
+- generic [ref=f7e3]:
+  - banner [ref=f7e4]:
+    - generic [ref=f7e5]:
+      - img [ref=f7e7]
+      - heading "Image2Model" [level=1] [ref=f7e10]
+      - generic [ref=f7e11]: Beta
+    - navigation [ref=f7e12]:
+      - button "Docs" [ref=f7e13]
+      - button "GitHub" [ref=f7e14]
+  - main [ref=f7e15]:
+    - complementary [ref=f7e16]:
+      - heading "Images" [level=2] [ref=f7e18]
+      - generic [ref=f7e20]:
+        - generic [ref=f7e306]:
+          - generic [ref=f7e307]:
+            - img [ref=f7e310]
+            - generic [ref=f7e312]:
+              - paragraph [ref=f7e313]: jquery-plain-wordmark.svg
+              - paragraph [ref=f7e314]: SVG · 5.7 KB
+            - button [ref=f7e315]:
+              - img [ref=f7e316]
+          - generic [ref=f7e319]:
+            - generic [ref=f7e320] [cursor=pointer]: Replace
+            - button "Remove" [ref=f7e321]
+        - generic [ref=f7e81]:
+          - generic [ref=f7e82]:
+            - img [ref=f7e83]
+            - heading "Layers (10)" [level=3] [ref=f7e87]
+          - generic [ref=f7e88]:
+            - generic [ref=f7e323]:
+              - button [ref=f7e324]:
+                - img [ref=f7e325]
+              - generic [ref=f7e328]: Layer 1
+              - button [ref=f7e329]:
+                - img [ref=f7e330]
+            - generic [ref=f7e334]:
+              - button [ref=f7e335]:
+                - img [ref=f7e336]
+              - generic [ref=f7e339]: Layer 2
+              - button [ref=f7e340]:
+                - img [ref=f7e341]
+            - generic [ref=f7e345]:
+              - button [ref=f7e346]:
+                - img [ref=f7e347]
+              - generic [ref=f7e350]: Layer 3
+              - button [ref=f7e351]:
+                - img [ref=f7e352]
+            - generic [ref=f7e356]:
+              - button [ref=f7e357]:
+                - img [ref=f7e358]
+              - generic [ref=f7e361]: Layer 4
+              - button [ref=f7e362]:
+                - img [ref=f7e363]
+            - generic [ref=f7e367]:
+              - button [ref=f7e368]:
+                - img [ref=f7e369]
+              - generic [ref=f7e372]: Layer 5
+              - button [ref=f7e373]:
+                - img [ref=f7e374]
+            - generic [ref=f7e378]:
+              - button [ref=f7e379]:
+                - img [ref=f7e380]
+              - generic [ref=f7e383]: Layer 6
+              - button [ref=f7e384]:
+                - img [ref=f7e385]
+            - generic [ref=f7e389]:
+              - button [ref=f7e390]:
+                - img [ref=f7e391]
+              - generic [ref=f7e394]: Layer 7
+              - button [ref=f7e395]:
+                - img [ref=f7e396]
+            - generic [ref=f7e400]:
+              - button [ref=f7e401]:
+                - img [ref=f7e402]
+              - generic [ref=f7e405]: Layer 8
+              - button [ref=f7e406]:
+                - img [ref=f7e407]
+            - generic [ref=f7e411]:
+              - button [ref=f7e412]:
+                - img [ref=f7e413]
+              - generic [ref=f7e416]: Layer 9
+              - button [ref=f7e417]:
+                - img [ref=f7e418]
+            - generic [ref=f7e422]:
+              - button [ref=f7e423]:
+                - img [ref=f7e424]
+              - generic [ref=f7e427]: Layer 10
+              - button [ref=f7e428]:
+                - img [ref=f7e429]
+    - generic [ref=f7e47]: 3D Viewport
+    - complementary [ref=f7e48]:
+      - heading "Controls" [level=2] [ref=f7e50]
+      - generic [ref=f7e51]:
+        - generic [ref=f7e52]:
+          - img [ref=f7e432]
+          - generic [ref=f7e208]:
+            - paragraph [ref=f7e209]: jquery-plain-wordmark.svg
+            - paragraph [ref=f7e210]: SVG
+        - generic [ref=f7e211]:
+          - generic [ref=f7e212]:
+            - img [ref=f7e213]
+            - heading "Conversion" [level=3] [ref=f7e216]
+          - generic [ref=f7e217]:
+            - generic [ref=f7e218]:
+              - generic [ref=f7e219]: SVG Mode
+              - generic [ref=f7e220]:
+                - button "Auto" [ref=f7e221]
+                - button "Layered" [ref=f7e222]
+                - button "Engraved" [ref=f7e223]
+            - generic [ref=f7e224]:
+              - generic [ref=f7e225]:
+                - generic [ref=f7e226]: Depth
+                - generic [ref=f7e227]: "0.50"
+              - slider [ref=f7e228] [cursor=pointer]: "0.5"
+            - generic [ref=f7e229]:
+              - generic [ref=f7e230]:
+                - generic [ref=f7e231]: Bevel
+                - generic [ref=f7e232]: "0.05"
+              - slider [ref=f7e233] [cursor=pointer]: "0.05"
+            - generic [ref=f7e234]:
+              - generic [ref=f7e235]:
+                - generic [ref=f7e236]: Smoothness
+                - generic [ref=f7e237]: "5.00"
+              - slider [ref=f7e238] [cursor=pointer]: "5"
+        - generic [ref=f7e239]:
+          - generic [ref=f7e240]:
+            - img [ref=f7e241]
+            - heading "Material" [level=3] [ref=f7e247]
+          - generic [ref=f7e248]:
+            - generic [ref=f7e249]:
+              - generic [ref=f7e250]: Color
+              - generic [ref=f7e251]:
+                - generic [ref=f7e252]: "#6366f1"
+                - textbox [ref=f7e253] [cursor=pointer]: "#6366f1"
+            - generic [ref=f7e254]:
+              - generic [ref=f7e255]:
+                - generic [ref=f7e256]: Metalness
+                - generic [ref=f7e257]: "0.00"
+              - slider [ref=f7e258] [cursor=pointer]: "0"
+            - generic [ref=f7e259]:
+              - generic [ref=f7e260]:
+                - generic [ref=f7e261]: Roughness
+                - generic [ref=f7e262]: "0.70"
+              - slider [ref=f7e263] [cursor=pointer]: "0.7"
+        - generic [ref=f7e264]:
+          - generic [ref=f7e265]:
+            - img [ref=f7e266]
+            - heading "Viewport" [level=3] [ref=f7e269]
+          - generic [ref=f7e270]:
+            - generic [ref=f7e271] [cursor=pointer]:
+              - generic [ref=f7e272]: Show Grid
+              - checkbox "Show Grid" [checked] [ref=f7e274]
+            - generic [ref=f7e277] [cursor=pointer]:
+              - generic [ref=f7e278]: Show Axes
+              - checkbox "Show Axes" [checked] [ref=f7e280]
+            - generic [ref=f7e283] [cursor=pointer]:
+              - generic [ref=f7e284]: Wireframe
+              - checkbox "Wireframe" [ref=f7e286]
+            - generic [ref=f7e289]:
+              - generic [ref=f7e290]: Background
+              - generic [ref=f7e291]:
+                - button "Dark" [ref=f7e292]: Dark
+                - button "Gray" [ref=f7e294]: Gray
+                - button "Light" [ref=f7e296]: Light
+              - generic [ref=f7e298]:
+                - generic [ref=f7e299]: Custom
+                - textbox [ref=f7e300] [cursor=pointer]: "#111111"
+        - button "Export GLB" [ref=f7e302]:
+          - img [ref=f7e303]
+          - text: Export GLB
