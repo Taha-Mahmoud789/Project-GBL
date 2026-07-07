@@ -10,7 +10,7 @@ export class LocalEngine implements BaseEngine {
 
   private readonly baseUrl: string;
 
-  constructor(baseUrl = 'http://localhost:8000') {
+  constructor(baseUrl = '') {
     this.baseUrl = baseUrl;
   }
 

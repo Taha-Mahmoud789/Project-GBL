@@ -10,4 +10,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/analyze': 'http://localhost:8000',
+      '/convert': 'http://localhost:8000',
+      '/health': 'http://localhost:8000',
+      '/progress': 'http://localhost:8000',
+    },
+  },
 })

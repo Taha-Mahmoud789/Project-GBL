@@ -95,7 +95,7 @@ def analyze_svg(svg_content: str) -> dict:
     multi_color = len(colors) > 1
     has_raster = images > 0
 
-    if has_raster and vector_shapes == 0:
+    if has_raster:
         svg_type = "raster"
         recommended_engine = "RASTER_TRACE"
     elif multi_color or groups > 1:

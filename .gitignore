@@ -1,1 +1,6 @@
 node_modules
+.playwright-mcp
+__pycache__
+*.pyc
+*.png
+.vite

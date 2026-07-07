@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "backend": "cd engine && python -m uvicorn app:app --port 8000 --reload",
+    "start": "echo 'Run in two terminals: npm run backend (1) and npm run dev (2)'",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
